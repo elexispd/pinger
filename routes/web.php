@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeedController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('layouts.master');
+    return view('login');
 });
+
+
+Route::get('/feed', [FeedController::class, 'index']);
