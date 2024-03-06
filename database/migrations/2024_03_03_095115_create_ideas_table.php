@@ -13,18 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        // Schema::create('ideas', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->timestamps();
+        // });
+        Schema::create('ideas', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->text('content');
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onDelete('cascade');
             $table->timestamps();
         });
     }
+
+
 
     /**
      * Reverse the migrations.
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('ideas');
     }
 };

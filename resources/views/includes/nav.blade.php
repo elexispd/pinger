@@ -8,15 +8,31 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
-                </li>
+            @auth
                 <li class="nav-item">
                     <a class="nav-link" href="/profile">Profile</a>
                 </li>
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <button class="nav-link" type="submit">Logout</button>
+                    </form>
+
+                </li>
+            @else
+                <li class="nav-item">
+                    @if (Route::currentRouteName() != 'login')
+                    <a class="nav-link" href="/login">Login</a>
+                    @endif
+
+                </li>
+                <li class="nav-item">
+                    @if (Route::currentRouteName() != 'register')
+                    <a class="nav-link" href="/register">Register</a>
+                    @endif
+
+                </li>
+            @endauth
             </ul>
         </div>
     </div>
