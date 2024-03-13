@@ -1,4 +1,5 @@
-<hr>
+
+
 
 <div class="d-flex align-items-start" style="margin-left:15px;">
     <img style="width:35px" class="me-2 avatar-sm rounded-circle"
@@ -6,19 +7,13 @@
         alt="Luigi Avatar">
     <div class="w-100">
         <div class="d-flex justify-content-between">
-            <h6 class="">Luigi
+            <h6 class="">{{ $comment->user->username }}
             </h6>
 
-            <small class="fs-6 fw-light text-muted"> 3 hour
-                ago</small>
+            <small class="fs-6 fw-light text-muted"> {{ $comment->created_at->diffForHumans() }} </small>
         </div>
         <p class="fs-6 mt-3 fw-light">
-            and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and
-            Evil)
-            by
-            Cicero, written in 45 BC. This book is a treatise on the theory of ethics,
-            very
-            popular during the Renaissan
+            {{ $comment->comment }}
         </p>
         <div class="d-flex justify-content-end">
             <div>
@@ -32,4 +27,3 @@
         </div>
     </div>
 </div>
-

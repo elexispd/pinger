@@ -11,8 +11,23 @@
     @include('includes.idea-input')
     <hr>
     <div class="mt-3">
-       @include('includes.idea')
+       @foreach ($ideas as $idea)
+          @include('includes.idea-card', ['idea' => $idea])
+       @endforeach
+
     </div>
+
+
 </div>
+
+
+
+
+<script src="js/main.js"></script>
+
+
+
+
+
 
 @endsection

@@ -5,34 +5,43 @@ namespace App\Http\Controllers;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+
 
 class IdeaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function feed(Idea $idea)
+    {
+        $ideas = $idea->withCount(['comments', 'likes']) // Eager load comments and likes counts
+                    ->orderBy('created_at', 'desc')    // Order by creation date in descending order
+                    ->get();
+        return view('index', compact('ideas'));
+    }
+
+    public function loadComments(Idea $idea)
+    {
+        $skip = request()->query('skip', 0);
+        $comments = $idea->comments()->skip($skip)->take(3)->get();
+        $hasMore = $idea->comments->count() > $skip + 3;
+
+        return response()->json([
+            'comments' => $comments,
+            'hasMore' => $hasMore,
+        ]);
+    }
+
     public function create()
     {
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     */
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -41,7 +50,7 @@ class IdeaController extends Controller
 
         $is_saved = Idea::create([
             'content' => $request->input('content'),
-            'user_id' => auth()->user()->id
+            'user_id' => Auth::id()
         ]);
 
         if ($is_saved) {
@@ -52,23 +61,21 @@ class IdeaController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show($idea_id)
     {
-        //
+
+    // Eager load the idea with its comments and likes
+        $idea = Idea::with(['comments', 'likes'])->find($idea_id);
+
+        if (!$idea) {
+            abort(404); // Return a 404 error if the idea is not found
+        }
+
+        return view('show', compact('idea'));
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         //

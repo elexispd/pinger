@@ -1,4 +1,4 @@
-<div class="col-3">
+<div class="col-3 position-static">
     <div class="card">
         <div class="card-header pb-0 border-0">
             <h5 class="">Search</h5>

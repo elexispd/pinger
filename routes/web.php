@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\IdeaController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,9 +38,13 @@ Route::get('/login', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [FeedController::class, 'index']);
-    Route::get('/feed', [FeedController::class, 'index']);
+    Route::get('/', [IdeaController::class, 'feed'])->name('feed');
+    Route::get('/feed', [IdeaController::class, 'feed']);
     Route::post('/timeline', [IdeaController::class, 'store'])->name('postIdea');
+    Route::get('/comment/{idea_id}', [IdeaController::class, 'show'])->name('show_comment');
+    Route::post('/comment', [CommentController::class, 'store'])->name('comment');
+    Route::post('/like', [LikeController::class, 'store'])->name('like');
+    Route::get('/ideas/{idea}/comments', [IdeaController::class, 'loadComments']);
 });
 
 require __DIR__.'/auth.php';
