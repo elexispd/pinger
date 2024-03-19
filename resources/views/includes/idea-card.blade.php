@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <img style="width:50px" class="me-2 avatar-sm rounded-circle"
-                    src="https://api.dicebear.com/6.x/fun-emoji/svg?seed=Mario" alt="Mario Avatar">
+                    src="https://xsgames.co/randomusers/avatar.php?g=male" alt="Mario Avatar">
                 <div>
                     <h5 class="card-title mb-0"><a href="#" class="text-capitalize"> {{ $idea->user->username }}
                         </a></h5>
@@ -21,14 +21,14 @@
                     <a style="text-decoration: none;" class="fw-light nav-link fs-6">
                         <span class="fas fa-heart like @if ($idea->likes->contains('user_id', Auth::id())) text-danger @endif"
                               onclick="like(event)" data-url="{{ route('like') }}" data-value='{{ $idea->id }}'>
-                        </span> <span class="like-counter">{{ $idea->likes_count }}</span>
+                        </span> <span class="like-counter">{{ $idea->likes->count() }}</span>
                     </a>
                 </div>
 
                 <div class="px-2"> <!-- Added div container -->
                     <a href="{{ route('show_comment', $idea->id) }}" style="text-decoration: none;" class="fw-light nav-link fs-6">
                         <span class="fas fa-comment text-dark"></span>
-                        <span class="comment-counter">{{ $idea->comments_count }}</span>
+                        <span class="comment-counter">{{ $idea->comments->count() }}</span>
                     </a>
                 </div>
 

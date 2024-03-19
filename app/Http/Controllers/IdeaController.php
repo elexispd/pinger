@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Idea;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,20 @@ class IdeaController extends Controller
     }
 
     public function feed(Idea $idea)
-    {
-        $ideas = $idea->withCount(['comments', 'likes']) // Eager load comments and likes counts
-                    ->orderBy('created_at', 'desc')    // Order by creation date in descending order
-                    ->get();
-        return view('index', compact('ideas'));
+{
+    $idea_query = $idea->withCount(['comments', 'likes']) // Eager load comments and likes counts
+                ->orderBy('created_at', 'desc'); // Order by creation date in descending order
+
+    if (request()->has('search')) {
+        $search = request()->get('search');
+        $ideas = $idea_query->where('content', 'like', '%'.request()->get('search', '') . '%');
     }
+
+    $ideas = $idea_query->get(); // Execute the query and retrieve results
+
+
+    return view('idea.index', compact('ideas'));
+}
 
     public function loadComments(Idea $idea)
     {
@@ -38,6 +47,18 @@ class IdeaController extends Controller
     public function create()
     {
 
+    }
+
+
+    public function myTimeline() {
+        $user = Auth::user();
+        $ideas = $user->ideas;
+        return view('idea.timeline', compact('ideas'));
+    }
+    public function timeline(Request $request) {
+        $user = User::where('username', $request->username)->firstOrFail();
+        $ideas = $user->ideas()->get();
+        return view('idea.timeline', compact('ideas'));
     }
 
 
@@ -71,7 +92,7 @@ class IdeaController extends Controller
             abort(404); // Return a 404 error if the idea is not found
         }
 
-        return view('show', compact('idea'));
+        return view('idea.show', compact('idea'));
 
     }
 
@@ -103,4 +124,8 @@ class IdeaController extends Controller
     {
         //
     }
+
+
+
+
 }

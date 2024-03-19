@@ -1,10 +1,12 @@
 
+
+
 @include('layouts.header')
     {{-- Navbar goes here --}}
     @include('includes.nav')
 
     <div class="container py-4">
-        <div class="row">
+        <div class=" position-relative" style="display: flex; justify-content: center;">
 
             {{-- Sidebar Menu Goes here --}}
             @include('includes.sidebar-menu')
@@ -15,10 +17,15 @@
             @yield('content')
 
             {{-- Side bar Goes here --}}
-            @include('includes.sidebar')
+            @php
+                $limit = 5;
+            @endphp
+            @include('includes.sidebar', ['limit' => $limit])
 
 
         </div>
     </div>
 
 @include('layouts.footer')
+
+

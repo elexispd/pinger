@@ -36,7 +36,8 @@ class CommentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()->first()], 422);
+            // return response()->json(['errors' => $validator->errors()->first()], 422);
+            return redirect()->back()->with('alert', ['type' => 'error', 'message' => $validator->errors()->first()]);
         }
 
         $comment = Comment::create([
@@ -52,7 +53,8 @@ class CommentController extends Controller
             'created_at' => $comment->created_at,
         ];
 
-        return response()->json(['success' => $likeDetails]);
+        // return response()->json(['success' => $likeDetails]);
+        return redirect()->back()->with('alert', ['type' => 'success', 'message' => "You commented on this"]);
     }
 
 

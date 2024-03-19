@@ -1,13 +1,15 @@
-<div class="col-3 position-static">
+<div class="col-3" style="position: fixed; right: 20px; ">
     <div class="card">
         <div class="card-header pb-0 border-0">
             <h5 class="">Search</h5>
         </div>
         <div class="card-body">
-            <input placeholder="...
-            " class="form-control w-100" type="text"
-                id="search">
-            <button class="btn btn-dark mt-2"> Search</button>
+            <form action="{{ route('feed') }}" method="get">
+                <input placeholder="...
+                " class="form-control w-100" type="text"
+                    id="search" name="search" >
+                <button class="btn btn-dark mt-2"> Search</button>
+            </form>
         </div>
     </div>
     <div class="card mt-3">
@@ -15,33 +17,36 @@
             <h5 class="">Who to follow</h5>
         </div>
         <div class="card-body">
-            <div class="hstack gap-2 mb-3">
-                <div class="avatar">
-                    <a href="#!"><img class="avatar-img rounded-circle"
-                            src="https://api.dicebear.com/6.x/fun-emoji/svg?seed=Mario" alt=""></a>
+            @if($usersNotFollowed->isEmpty())
+                <p>No users to display.</p>
+            @else
+            @foreach ($usersNotFollowed as $user)
+                <div class="hstack gap-2 mb-3">
+                    <div class="avatar">
+                        <a href="#!"><img class="avatar-img rounded-circle"
+                                src="https://xsgames.co/randomusers/avatar.php?g=male" width="50" alt=""></a>
+                    </div>
+                    <div class="overflow-hidden">
+                        <span class="h6 mb-0">{{ $user->first_name }} {{ $user->last_name }}</span>
+                        <p class="mb-0 small text-truncate"><a href="{{ route('timeline', [$user->username]) }}">@ {{ $user->username }}</a></p>
+                    </div>
+                    <span class="btn btn-primary-soft rounded-circle icon-md ms-auto" data-url="{{ route('follow') }}" data-value="{{ $user->id }}" onclick="follow(this)">
+                        <i
+                            class="fa-solid fa-plus" > </i></span>
                 </div>
-                <div class="overflow-hidden">
-                    <a class="h6 mb-0" href="#!">Mario Brother</a>
-                    <p class="mb-0 small text-truncate">@Mario</p>
+            @endforeach
+            @endif
+
+            @if ($usersNotFollowed->count() > 4)
+                <div class="d-grid mt-3">
+                    <a class="btn btn-sm btn-primary-soft" href="#!">Show More</a>
+
                 </div>
-                <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i
-                        class="fa-solid fa-plus"> </i></a>
-            </div>
-            <div class="hstack gap-2 mb-3">
-                <div class="avatar">
-                    <a href="#!"><img class="avatar-img rounded-circle"
-                            src="https://api.dicebear.com/6.x/fun-emoji/svg?seed=Mario" alt=""></a>
-                </div>
-                <div class="overflow-hidden">
-                    <a class="h6 mb-0" href="#!">Mario Brother</a>
-                    <p class="mb-0 small text-truncate">@Mario</p>
-                </div>
-                <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i
-                        class="fa-solid fa-plus"> </i></a>
-            </div>
-            <div class="d-grid mt-3">
-                <a class="btn btn-sm btn-primary-soft" href="#!">Show More</a>
-            </div>
+            @endif
+
         </div>
     </div>
 </div>
+
+
+<script></script>

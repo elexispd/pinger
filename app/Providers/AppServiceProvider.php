@@ -3,6 +3,12 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use App\Models\User;
+use App\Models\Follow;
+use App\Services\FollowService;
+use App\Services\UserService;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +29,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        View::composer('*', function ($view) {
+            $limit = $view->getData()['limit'] ?? null;
+            $usersNotFollowed = app(FollowService::class)->getUsersNotFollowed($limit);
+            $view->with('usersNotFollowed', $usersNotFollowed);
+        });
+
+        View::composer('*', function ($view) {
+           $user = auth()->user();
+           $view->with('user', $user);
+        });
+
+
+        View::composer('*', function ($view) {
+            $userService = app(UserService::class);
+            $user = $userService->getUserByRoute();
+            $view->with('userByRoute', $user);
+        });
+
+
     }
 }

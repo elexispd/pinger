@@ -108,4 +108,40 @@ function like(event) {
 }
 
 
+function follow(event) {
+    var user= $(event).data('value');
+    var url= $(event).data('url');
+    var clickedElement = $(event);
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: { 'follow': user },
+        dataType: 'json',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Get CSRF token from meta tag
+        },
+        success: function(data) {
+            if (data.success) {
+
+                var newElement = $('<span class="btn btn-primary-soft rounded-circle icon-md ms-auto"><i class="fa-solid fa-check text-success"></i></span>');
+
+                // Replace the clicked element with the new one
+                clickedElement.replaceWith(newElement);
+            } else {
+                cutealert({
+                    type: 'error',
+                    title: 'Error',
+                    content: 'Something went wrong'
+                })
+            }
+        },
+        error: function(xhr, status, error) {
+            var errorMessage = JSON.parse(xhr.responseText).errors;
+            alert('Error: ' + errorMessage);
+        }
+    });
+}
+
+
 

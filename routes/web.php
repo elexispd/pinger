@@ -5,6 +5,7 @@ use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +46,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/comment', [CommentController::class, 'store'])->name('comment');
     Route::post('/like', [LikeController::class, 'store'])->name('like');
     Route::get('/ideas/{idea}/comments', [IdeaController::class, 'loadComments']);
+
+    Route::get('timeline/', [IdeaController::class, 'myTimeline'])->name('my_timeline');
+    Route::get('timeline/{username}', [IdeaController::class, 'timeline'])->name('timeline');
+
+
+    Route::get('/profile/{username}', [ProfileController::class, 'store'])->name('profile');
+
+    Route::post('/follow/', [FollowController::class, 'store'])->name('follow');
+
+    Route::get('/explore/', [FollowController::class, 'explore'])->name('explore');
+    Route::post('/explore/', [FollowController::class, 'storeRedirect'])->name('follow.redirect');
+
+
 });
 
 require __DIR__.'/auth.php';
