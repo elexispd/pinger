@@ -22,8 +22,9 @@ class FollowController extends Controller
     // Method for handling non-AJAX requests
     public function storeRedirect(Request $request)
     {
+
         try {
-            $this->createFollow($request->get('follow'));
+            $this->createFollow($request->followed_id);
             return redirect()->back()->with('alert',['type' => 'success', 'message' => 'User followed successfully']);
         } catch(\Exception $e) {
             return redirect()->back()->with('alert', ['type' => 'error', 'message' => 'Failed to follow user: ' . $e->getMessage()]);
@@ -37,6 +38,19 @@ class FollowController extends Controller
             'follower_id' =>  Auth::id(),
             'followed_id' => $followedId,
         ]);
+    }
+
+    public function destroy(Request $request) {
+        $followedId = $request->input('followed_id');
+        $followerId = Auth::id();
+
+        // Delete the record where either followed_id or follower_id matches
+        Follow::where('followed_id', $followedId)
+            ->where('follower_id', $followerId)
+            ->delete();
+
+        // Optionally, you can redirect back or return a response
+        return redirect()->back()->with('alert',['type' => 'success', 'message' => 'Unfollowed successfully']);
     }
 
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Services\UserService;
 
 
 class IdeaController extends Controller
@@ -15,6 +16,14 @@ class IdeaController extends Controller
     {
         //
     }
+
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
 
     public function feed(Idea $idea)
 {
@@ -25,6 +34,8 @@ class IdeaController extends Controller
         $search = request()->get('search');
         $ideas = $idea_query->where('content', 'like', '%'.request()->get('search', '') . '%');
     }
+
+
 
     $ideas = $idea_query->get(); // Execute the query and retrieve results
 
@@ -53,13 +64,18 @@ class IdeaController extends Controller
     public function myTimeline() {
         $user = Auth::user();
         $ideas = $user->ideas;
-        return view('idea.timeline', compact('ideas'));
+        $userByRoute = false;
+
+        return view('idea.timeline', compact(['ideas', 'userByRoute']));
     }
     public function timeline(Request $request) {
-        $user = User::where('username', $request->username)->firstOrFail();
+        $user = $this->userService->getUser($request->username);
+        $userByRoute = $this->userService ->getUserByRoute();
         $ideas = $user->ideas()->get();
-        return view('idea.timeline', compact('ideas'));
+
+        return view('idea.timeline', compact(['ideas', 'userByRoute']));
     }
+
 
 
 

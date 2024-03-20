@@ -6,8 +6,15 @@
 
     {{-- alert goes here --}}
     @if ($userByRoute)
-    <h4> {{ $userByRoute->first_name }} {{ $userByRoute->last_name }} Timeline </h4>
+    @if ($userByRoute->username !== Auth::user()->username)
+        <h4> {{ $userByRoute->first_name }} {{ $userByRoute->last_name }} Timeline </h4>
     @endif
+
+    @endif
+
+
+
+
 
     @include('includes.alert')
     @can('create', App\Models\Idea::class)

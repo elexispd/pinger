@@ -51,14 +51,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('timeline/{username}', [IdeaController::class, 'timeline'])->name('timeline');
 
 
-    Route::get('/profile/{username}', [ProfileController::class, 'store'])->name('profile');
+
 
     Route::post('/follow/', [FollowController::class, 'store'])->name('follow');
+    Route::delete('/follow/', [FollowController::class, 'destroy'])->name('unfollow');
 
     Route::get('/explore/', [FollowController::class, 'explore'])->name('explore');
     Route::post('/explore/', [FollowController::class, 'storeRedirect'])->name('follow.redirect');
 
+    // Route::get('/profile/{username}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/{username}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/{username}', [ProfileController::class, 'update'])->name('profile.updtae');
+
 
 });
+
+
+
 
 require __DIR__.'/auth.php';

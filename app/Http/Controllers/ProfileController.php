@@ -8,12 +8,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
+use App\Services\UserService;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    // public function show() {
+    //     return view('profile.show');
+    // }
+
+    public function show($username = null) {
+        if ($username === null) {
+            $username = Auth::user()->username;
+        }
+
+        $user = $this->userService->getUser($username);
+        $following = $user->following;
+        $followers = $user->followers;
+
+        return view('profile.show', compact(['user', 'following', 'followers', 'username']) );
+    }
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -34,7 +56,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit');
     }
 
     /**

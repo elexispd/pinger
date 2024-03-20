@@ -35,17 +35,17 @@ class AppServiceProvider extends ServiceProvider
             $view->with('usersNotFollowed', $usersNotFollowed);
         });
 
-        View::composer('*', function ($view) {
-           $user = auth()->user();
-           $view->with('user', $user);
-        });
+        // View::composer('*', function ($view) {
+        //    $user = auth()->user();
+        //    $view->with('user', $user);
+        // });
 
 
-        View::composer('*', function ($view) {
-            $userService = app(UserService::class);
-            $user = $userService->getUserByRoute();
-            $view->with('userByRoute', $user);
-        });
+        // View::composer('*', function ($view) {
+        //     $userService = app(UserService::class);
+        //     $user = $userService->getUserByRoute();
+        //     $view->with('userByRoute', $user);
+        // });
 
 
     }

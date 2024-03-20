@@ -5,9 +5,15 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Follow;
 use Illuminate\Support\Facades\Auth;
+use App\Services\UserService;
 
 class FollowService
 {
+    protected $userService;
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     public function getUsersNotFollowed($limit = null) {
         if (!Auth::check()) {
             return []; // or any other appropriate action for unauthenticated users
@@ -28,5 +34,15 @@ class FollowService
 
         return $query->get();
     }
+
+    public function getFollow($targetUser) {
+        $currentUser = Auth::user();
+        $targetUser =  $this->userService->getUser($targetUser);
+        $isCurrentUserFollowingTarget = $currentUser->following->contains('id', $targetUser->id);
+        $isTargetUserFollowingCurrentUser = $targetUser->followers->contains('id', $currentUser->id);
+        return $isCurrentUserFollowingTarget || $isTargetUserFollowingCurrentUser;
+
+    }
+
 
 }
