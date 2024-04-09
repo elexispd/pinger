@@ -6,10 +6,12 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Validation\Rules;
 
 class ProfileController extends Controller
 {
@@ -46,17 +48,42 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(User $user, Request $request)
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $request->validate([
+            'first_name' => ['required', 'max:500', 'min:2'],
+            'last_name' => ['required', 'max:500', 'min:2'],
+            'email' => 'required|unique:users,email,' .$user->id,
+
+        ]);
+
+         $update =  $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+
+            ]);
+
+        if($update) {
+            return redirect()->back()->with('alert',['type' => 'success', 'message' => 'profile updated successfully']);
+
+        } else  {
+            dd($user);
         }
 
-        $request->user()->save();
 
-        return Redirect::route('profile.edit');
+    }
+
+    public function changePassword(Request $request) {
+        $request->validate([
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = Auth::user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return redirect()->back()->with('alert',['type' => 'success','message' => 'password changed successfully']);
     }
 
     /**

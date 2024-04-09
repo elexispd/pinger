@@ -7,7 +7,11 @@
     {{-- alert goes here --}}
     @if ($userByRoute)
     @if ($userByRoute->username !== Auth::user()->username)
-        <h4> {{ $userByRoute->first_name }} {{ $userByRoute->last_name }} Timeline </h4>
+        <div class="d-flex justify-content-between">
+            <div><h4> {{ $userByRoute->first_name }} {{ $userByRoute->last_name }} Timeline </h4></div>
+            <div><a href="{{ route('profile.show', $userByRoute->username) }}">Profile</a></div>
+        </div>
+
     @endif
 
     @endif
@@ -27,6 +31,8 @@
         @foreach ($ideas as $idea)
           @include('includes.idea-card', ['idea' => $idea])
         @endforeach
+
+        {{ $ideas->links() }}
 
 
 

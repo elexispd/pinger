@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PingEmail;
 use App\Models\Idea;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Services\UserService;
 
 
@@ -37,7 +39,7 @@ class IdeaController extends Controller
 
 
 
-    $ideas = $idea_query->get(); // Execute the query and retrieve results
+    $ideas = $idea_query->paginate(5); // Execute the query and retrieve results
 
 
     return view('idea.index', compact('ideas'));
@@ -71,7 +73,7 @@ class IdeaController extends Controller
     public function timeline(Request $request) {
         $user = $this->userService->getUser($request->username);
         $userByRoute = $this->userService ->getUserByRoute();
-        $ideas = $user->ideas()->get();
+        $ideas = $user->ideas()->paginate(5);
 
         return view('idea.timeline', compact(['ideas', 'userByRoute']));
     }
@@ -79,7 +81,7 @@ class IdeaController extends Controller
 
 
 
-    public function store(Request $request)
+    public function store(Request $request,)
     {
         $request->validate([
             'content' => ['required', 'max:500', 'min:10']
@@ -89,6 +91,9 @@ class IdeaController extends Controller
             'content' => $request->input('content'),
             'user_id' => Auth::id()
         ]);
+
+        $user = Auth::user();
+        Mail::to($user->email)->send(new PingEmail($user));
 
         if ($is_saved) {
             return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Idea created successfully.']);
@@ -118,27 +123,30 @@ class IdeaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'content' => 'required|string',
+            'idea_id' => 'required|int',
+        ]);
+
+        $content = $request->input('content');
+        $ideaId = $request->input('idea_id');
+
+        $idea = Idea::findOrFail($ideaId);
+        $idea->content = $content;
+        $idea->save();
+
+        return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Idea updated successfully.']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function destroy(Request $request)
     {
-        //
+        $idea = Idea::findOrFail($request->input('delete_idea_id'));
+        $idea->delete();
+        return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Idea deleted successfully.']);
     }
 
 

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Follow;
 use App\Services\FollowService;
 use App\Services\UserService;
+use Illuminate\Pagination\Paginator;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
             $usersNotFollowed = app(FollowService::class)->getUsersNotFollowed($limit);
             $view->with('usersNotFollowed', $usersNotFollowed);
         });
+
+        Paginator::useBootstrapFive();
 
         // View::composer('*', function ($view) {
         //    $user = auth()->user();

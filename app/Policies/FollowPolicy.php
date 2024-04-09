@@ -56,6 +56,8 @@ class FollowPolicy
             // Check if the current user is following the user
             $isFollowing = $this->followService->getFollow($username);
 
+            // dd($isFollowing);
+
             if(!$isFollowing) {
                 return true;
             } else{

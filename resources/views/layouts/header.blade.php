@@ -16,6 +16,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('/cutealert/cute-alert.js') }}"></script>
+    <script src="{{ asset('/cutealert/style.css') }}"></script>
 
 </head>
 

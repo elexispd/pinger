@@ -39,8 +39,9 @@ class FollowService
         $currentUser = Auth::user();
         $targetUser =  $this->userService->getUser($targetUser);
         $isCurrentUserFollowingTarget = $currentUser->following->contains('id', $targetUser->id);
+        // dd($isCurrentUserFollowingTarget);
         $isTargetUserFollowingCurrentUser = $targetUser->followers->contains('id', $currentUser->id);
-        return $isCurrentUserFollowingTarget || $isTargetUserFollowingCurrentUser;
+        return $isCurrentUserFollowingTarget ;
 
     }
 

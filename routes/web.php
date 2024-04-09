@@ -7,6 +7,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/comment/{idea_id}', [IdeaController::class, 'show'])->name('show_comment');
     Route::post('/comment', [CommentController::class, 'store'])->name('comment');
     Route::post('/like', [LikeController::class, 'store'])->name('like');
+    Route::put('/ideas/', [IdeaController::class, 'update'])->name('idea.update');
+    Route::delete('/ideas/', [IdeaController::class, 'destroy'])->name('idea.destroy');
     Route::get('/ideas/{idea}/comments', [IdeaController::class, 'loadComments']);
 
     Route::get('timeline/', [IdeaController::class, 'myTimeline'])->name('my_timeline');
@@ -61,12 +64,23 @@ Route::middleware(['auth'])->group(function () {
 
     // Route::get('/profile/{username}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/{username}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/{user}/edit', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
     Route::get('/profile/{username}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile/{username}', [ProfileController::class, 'update'])->name('profile.updtae');
+    Route::delete('/profile/}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 
 
 });
 
+Route::get('/test-email', function () {
+    Mail::raw('This is a test email from Laravel.', function ($message) {
+        $message->to('promisedeco24@gmail.com')->subject('Laravel Email Test');
+    });
+
+    return 'Email sent!';
+});
 
 
 

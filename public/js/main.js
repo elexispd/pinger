@@ -145,3 +145,8 @@ function follow(event) {
 
 
 
+$(".delete").click(function(e) {
+    e.preventDefault();
+
+
+})

@@ -16,6 +16,8 @@
           @include('includes.idea-card', ['idea' => $idea])
        @endforeach
 
+       {{ $ideas->links() }}
+
     </div>
 
 

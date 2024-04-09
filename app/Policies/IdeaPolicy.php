@@ -31,7 +31,7 @@ class IdeaPolicy
      */
     public function view(User $user, Idea $idea)
     {
-        //
+        return $user->id === $idea->user_id;
     }
 
     /**
@@ -68,7 +68,7 @@ class IdeaPolicy
      */
     public function update(User $user, Idea $idea)
     {
-        //
+        return $user->id === $idea->user_id;
     }
 
     /**
@@ -80,7 +80,7 @@ class IdeaPolicy
      */
     public function delete(User $user, Idea $idea)
     {
-        //
+        return $user->id === $idea->user_id;
     }
 
     /**
